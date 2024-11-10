@@ -22,12 +22,13 @@ public class QuestionDAO {
 
     public static int saveQuestion(Question q) {
         int status = 0;
-        String query = "INSERT INTO Question (quizId, questionText, options, correctAnswer) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Question (questionId, quizId, questionText, options, correctAnswer) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, q.getQuizId());
-            ps.setString(2, q.getQuestionText());
-            ps.setString(3, String.join(",", q.getOptions()));  // Joining the options with commas
-            ps.setString(4, q.getCorrectAnswer());
+            ps.setInt(1, q.getQuestionId());
+            ps.setInt(2, q.getQuizId());
+            ps.setString(3, q.getQuestionText());
+            ps.setString(4, String.join(",", q.getOptions()));  
+            ps.setString(5, q.getCorrectAnswer());
             status = ps.executeUpdate();
         } catch(SQLException e) {
             System.out.println(e);
@@ -61,7 +62,7 @@ public class QuestionDAO {
                 q.setQuizId(rs.getInt(2));
                 q.setQuestionText(rs.getString(3));
                 String optionsStr = rs.getString(4);
-                q.setOptions(List.of(optionsStr.split(","))); // Splitting options by comma
+                q.setOptions(List.of(optionsStr.split(","))); 
                 q.setCorrectAnswer(rs.getString(5));
             }
         } catch(SQLException e) {
@@ -94,7 +95,7 @@ public class QuestionDAO {
                 q.setQuizId(rs.getInt("quizId"));
                 q.setQuestionText(rs.getString("questionText"));
                 String optionsStr = rs.getString("options");
-                q.setOptions(List.of(optionsStr.split(",")));  // Splitting options by comma
+                q.setOptions(List.of(optionsStr.split(",")));  
                 q.setCorrectAnswer(rs.getString("correctAnswer"));
                 questions.add(q);
             }

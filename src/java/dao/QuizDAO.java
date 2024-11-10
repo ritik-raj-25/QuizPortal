@@ -22,11 +22,12 @@ public class QuizDAO {
 
     public static int saveQuiz(Quiz q) {
         int status = 0;
-        String query = "INSERT INTO Quiz (creatorId, quizTitle, quizDescription) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Quiz (quizId, creatorId, quizTitle, quizDescription) VALUES (?, ?, ?, ?)";
         try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, q.getCreatorId());
-            ps.setString(2, q.getQuizTitle());
-            ps.setString(3, q.getQuizDescription());
+            ps.setInt(1, q.getQuizId());
+            ps.setInt(2, q.getCreatorId());
+            ps.setString(3, q.getQuizTitle());
+            ps.setString(4, q.getQuizDescription());
             status = ps.executeUpdate();
         } catch(SQLException e) {
             System.out.println(e);
@@ -85,6 +86,26 @@ public class QuizDAO {
         String query = "SELECT quizId, creatorId, quizTitle, quizDescription, dateCreated FROM Quiz WHERE creatorId = ?";
         try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, creatorId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Quiz q = new Quiz();
+                q.setQuizId(rs.getInt("quizId"));
+                q.setCreatorId(rs.getInt("creatorId"));
+                q.setQuizTitle(rs.getString("quizTitle"));
+                q.setQuizDescription(rs.getString("quizDescription"));
+                q.setDateCreated(rs.getTimestamp("dateCreated"));
+                quizzes.add(q);
+            }
+        } catch(SQLException e) {
+            System.out.println(e);
+        }
+        return quizzes;
+    }
+    
+    public static List<Quiz> getQuizzes() {
+        List<Quiz> quizzes = new ArrayList<>();
+        String query = "SELECT quizId, creatorId, quizTitle, quizDescription, dateCreated FROM Quiz";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 Quiz q = new Quiz();

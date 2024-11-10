@@ -15,12 +15,12 @@ public class LoginServlet extends HttpServlet {
 
         if (user != null && user.getPassword().equals(password)) {
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+            session.setAttribute("userId", user.getUserId());
 
             if ("creator".equalsIgnoreCase(user.getUserType())) {
                 response.sendRedirect("CreateQuiz.jsp");
             } else {
-                response.sendRedirect("TakeQuiz.jsp");
+                response.sendRedirect("TakerQuizListServlet");
             }
         } else {
             request.setAttribute("errorMessage", "Invalid username or password.");

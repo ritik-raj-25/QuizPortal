@@ -80,7 +80,7 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User();
-                user.setUserId(rs.getInt("userId"));  // Fetch and set the userId from the result set
+                user.setUserId(rs.getInt("userId"));  
                 user.setUserName(rs.getString("userName"));
                 user.setPassword(rs.getString("password"));
                 user.setEmail(rs.getString("email"));
